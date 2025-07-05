@@ -7,6 +7,8 @@ import MonthlyTotalsChart from "../components/MonthlyTotalsChart";
 
 function Dashboard() {
   const [transactions, setTransactions] = useState([]);
+  const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState(""); // 'success' or 'danger'
 
   const [error, setError] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -61,6 +63,8 @@ function Dashboard() {
 
   const handleAdd = (newTransaction) => {
     setTransactions([newTransaction, ...transactions]);
+    setMessage("Transaction added successfully.");
+    setMessageType("success");
   };
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this transaction?")) {
@@ -69,6 +73,8 @@ function Dashboard() {
     try {
       await API.delete(`/transactions/${id}`);
       setTransactions(transactions.filter((tx) => tx._id !== id));
+      setMessage("Transaction deleted.");
+      setMessageType("success");
     } catch (err) {
       alert("Failed to delete transaction.");
     }
@@ -78,6 +84,15 @@ function Dashboard() {
     <div className="container mt-5">
       <h2>Your Transactions</h2>
       {error && <div className="alert alert-danger">{error}</div>}
+      {message && (
+        <div
+          className={`alert alert-${messageType}`}
+          onClick={() => setMessage("")}
+        >
+          {message}
+        </div>
+      )}
+
       <div className="row mb-4">
         <div className="col-md-4">
           <div className="card text-white bg-success mb-3">

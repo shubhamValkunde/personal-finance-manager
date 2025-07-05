@@ -9,12 +9,14 @@ function App() {
   return (
     <Router>
       <Navbar />
-      <Routes>
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/" element={<div>Home</div>} />
-      </Routes>
+      <div className="container py-4">
+        <Routes>
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/" element={<div>Home</div>} />
+        </Routes>
+      </div>
     </Router>
   );
 }
