@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import API from "../services/api";
 import AddTransaction from "../components/AddTransaction";
 import EditTransactionModal from "../components/EditTransactionModal";
+import SpendingChart from "../components/SpendingChart";
+import MonthlyTotalsChart from "../components/MonthlyTotalsChart";
 
 function Dashboard() {
   const [transactions, setTransactions] = useState([]);
@@ -119,6 +121,9 @@ function Dashboard() {
           ))}
         </select>
       </div>
+      <SpendingChart transactions={transactions} />
+
+      <MonthlyTotalsChart transactions={transactions} />
 
       {transactions.length === 0 ? (
         <p>No transactions found.</p>
