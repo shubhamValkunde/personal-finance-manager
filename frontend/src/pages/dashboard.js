@@ -17,6 +17,16 @@ function Dashboard() {
     );
   };
 
+  const income = transactions
+    .filter((t) => t.amount > 0)
+    .reduce((acc, t) => acc + t.amount, 0);
+
+  const expenses = transactions
+    .filter((t) => t.amount < 0)
+    .reduce((acc, t) => acc + t.amount, 0);
+
+  const balance = income + expenses;
+
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
@@ -49,6 +59,33 @@ function Dashboard() {
     <div className="container mt-5">
       <h2>Your Transactions</h2>
       {error && <div className="alert alert-danger">{error}</div>}
+      <div className="row mb-4">
+        <div className="col-md-4">
+          <div className="card text-white bg-success mb-3">
+            <div className="card-body">
+              <h5 className="card-title">Income</h5>
+              <p className="card-text">₹{income.toFixed(2)}</p>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-4">
+          <div className="card text-white bg-danger mb-3">
+            <div className="card-body">
+              <h5 className="card-title">Expenses</h5>
+              <p className="card-text">₹{expenses.toFixed(2)}</p>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-4">
+          <div className="card text-white bg-primary mb-3">
+            <div className="card-body">
+              <h5 className="card-title">Balance</h5>
+              <p className="card-text">₹{balance.toFixed(2)}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <AddTransaction onAdd={handleAdd} />
 
       {transactions.length === 0 ? (
