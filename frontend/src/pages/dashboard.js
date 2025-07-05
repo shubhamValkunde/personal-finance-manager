@@ -1,10 +1,21 @@
 import React, { useEffect, useState } from "react";
 import API from "../services/api";
 import AddTransaction from "../components/AddTransaction";
+import EditTransactionModal from "../components/EditTransactionModal";
 
 function Dashboard() {
   const [transactions, setTransactions] = useState([]);
   const [error, setError] = useState("");
+  const [editingTransaction, setEditingTransaction] = useState(null);
+  const handleEdit = (tx) => {
+    setEditingTransaction(tx);
+  };
+
+  const handleUpdate = (updatedTx) => {
+    setTransactions(
+      transactions.map((tx) => (tx._id === updatedTx._id ? updatedTx : tx))
+    );
+  };
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -21,6 +32,17 @@ function Dashboard() {
 
   const handleAdd = (newTransaction) => {
     setTransactions([newTransaction, ...transactions]);
+  };
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this transaction?")) {
+      return;
+    }
+    try {
+      await API.delete(`/transactions/${id}`);
+      setTransactions(transactions.filter((tx) => tx._id !== id));
+    } catch (err) {
+      alert("Failed to delete transaction.");
+    }
   };
 
   return (
@@ -39,6 +61,7 @@ function Dashboard() {
               <th>Amount</th>
               <th>Category</th>
               <th>Date</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -48,11 +71,31 @@ function Dashboard() {
                 <td>{tx.amount}</td>
                 <td>{tx.category}</td>
                 <td>{new Date(tx.date).toLocaleDateString()}</td>
+                <td>
+                  <button
+                    className="btn btn-sm btn-warning me-2"
+                    onClick={() => handleEdit(tx)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="btn btn-sm btn-danger"
+                    onClick={() => handleDelete(tx._id)}
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       )}
+
+      <EditTransactionModal
+        transaction={editingTransaction}
+        onClose={() => setEditingTransaction(null)}
+        onUpdate={handleUpdate}
+      />
     </div>
   );
 }
