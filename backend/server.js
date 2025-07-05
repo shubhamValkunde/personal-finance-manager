@@ -17,6 +17,10 @@ app.get("/", (req, res) => {
 
 app.use("/api/auth", authRoutes);
 
+const transactionRoutes = require("./routes/transactionRoutes");
+
+app.use("/api/transactions", transactionRoutes);
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
