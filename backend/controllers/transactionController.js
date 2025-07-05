@@ -1,7 +1,13 @@
 const Transaction = require("../models/Transaction");
+const { validationResult } = require("express-validator");
 
 // Create a transaction
 exports.createTransaction = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   const { title, amount, category, date } = req.body;
 
   try {
