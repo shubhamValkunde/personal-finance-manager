@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import API from "../services/api";
+import AddTransaction from "../components/AddTransaction";
 
 function Dashboard() {
   const [transactions, setTransactions] = useState([]);
@@ -18,10 +19,15 @@ function Dashboard() {
     fetchTransactions();
   }, []);
 
+  const handleAdd = (newTransaction) => {
+    setTransactions([newTransaction, ...transactions]);
+  };
+
   return (
     <div className="container mt-5">
       <h2>Your Transactions</h2>
       {error && <div className="alert alert-danger">{error}</div>}
+      <AddTransaction onAdd={handleAdd} />
 
       {transactions.length === 0 ? (
         <p>No transactions found.</p>
