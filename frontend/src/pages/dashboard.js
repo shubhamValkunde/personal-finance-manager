@@ -5,7 +5,13 @@ import EditTransactionModal from "../components/EditTransactionModal";
 
 function Dashboard() {
   const [transactions, setTransactions] = useState([]);
+
   const [error, setError] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const filteredTransactions = selectedCategory
+    ? transactions.filter((tx) => tx.category === selectedCategory)
+    : transactions;
+
   const [editingTransaction, setEditingTransaction] = useState(null);
   const handleEdit = (tx) => {
     setEditingTransaction(tx);
@@ -16,6 +22,17 @@ function Dashboard() {
       transactions.map((tx) => (tx._id === updatedTx._id ? updatedTx : tx))
     );
   };
+
+  const categories = [
+    "Food",
+    "Salary",
+    "Transportation",
+    "Entertainment",
+    "Shopping",
+    "Healthcare",
+    "Utilities",
+    "Other",
+  ];
 
   const income = transactions
     .filter((t) => t.amount > 0)
@@ -87,6 +104,21 @@ function Dashboard() {
       </div>
 
       <AddTransaction onAdd={handleAdd} />
+      <div className="mb-3">
+        <label>Filter by Category</label>
+        <select
+          className="form-select"
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+        >
+          <option value="">All Categories</option>
+          {categories.map((cat) => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
+          ))}
+        </select>
+      </div>
 
       {transactions.length === 0 ? (
         <p>No transactions found.</p>
@@ -102,7 +134,7 @@ function Dashboard() {
             </tr>
           </thead>
           <tbody>
-            {transactions.map((tx) => (
+            {filteredTransactions.map((tx) => (
               <tr key={tx._id}>
                 <td>{tx.title}</td>
                 <td>{tx.amount}</td>
